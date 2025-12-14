@@ -1,0 +1,334 @@
+\documentclass[11pt,answers]{exam}
+\usepackage{graphicx}
+\usepackage{packages}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{caption}
+\geometry{top=2cm, bottom=2cm, left=2cm, right=2cm}
+
+
+\begin{document}
+\noindent
+\vspace{1cm}
+LMECA2550 \hfill Igor Grégoire \hfill  2025-2026\\[-2mm]
+\rule{\linewidth}{0.5pt}
+
+\begin{center}
+
+{\large LMECA2550-HW2: Turbojet cycle analysis}
+\bigskip
+
+\end{center}
+\hrule
+
+\vspace{0.5cm}
+
+\section*{Reminders}
+We will use the nomenclature used in lecture to characterize the propulsion systems.\\
+As a reminder, we define the following variables:\\
+
+\begin{center}
+    
+\begin{minipage}{0.4\textwidth}
+\begin{itemize}
+    \item $\pi_d = \frac{p_{t2}}{p_{t0}}$
+    \item $\pi_c = \frac{p_{t3}}{p_{t2}}$
+    \item $\pi_b = \frac{p_{t4}}{p_{t3}}$
+    \item $\pi_t = \frac{p_{t5}}{p_{t4}}$
+    \item $\pi_n = \frac{p_{te}}{p_{t7}}$
+    \item $\pi_{AB} = \frac{p_{t7}}{p_{t5}}$
+    \item $\pi_{r} = \frac{p_{t0}}{p_{0}}$
+\end{itemize}
+\end{minipage}
+\hspace{5pt} % <<< réduit l'espace entre les deux colonnes
+\begin{minipage}{0.3\textwidth}
+\begin{itemize}
+    \item $\tau_d = \frac{T_{t2}}{T_{t0}}$
+    \item $\tau_c = \frac{T_{t3}}{T_{t2}}$
+    \item $\tau_b = \frac{T_{t4}}{T_{t3}}$
+    \item $\tau_t = \frac{T_{t5}}{T_{t4}}$
+    \item $\tau_n = \frac{T_{te}}{T_{t7}}$
+    \item $\tau_{AB} = \frac{T_{t7}}{T_{t5}}$
+    \item $\tau_{r} = \frac{T_{t0}}{T_{0}}$
+    \item $\tau_{\lambda} = \frac{c_{p,t} T_{t4}}{c_{p,c}T_{t0}}$
+\end{itemize}
+\end{minipage}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/jet.png}
+    \caption{Turbojet}
+    \label{fig:turbojet}
+\end{figure}
+
+\end{center}
+\newpage
+
+\section{Turbojet optimum compressor ratio}
+We want to derive the optimum pressure and temperature ratio across the compressor of an ideal turbojet without after burner. We consider an ideal turbojet: $\tau_d = 1 $, $\pi_d$ = 1 $p_{t,e}=p_{t,5}$ $\tau_n = 1$, $\pi_n  =1$, $\pi_b = 1$, $\pi_{AB} =1$
+\subsection{Specific thrust}
+We start from the thrust formula and derive the specific thrust formula from it.
+\begin{align*}
+    F &= \dot{m}(u_e - u_0) \\
+    \frac{F}{\dot{m}} &= u_e - u_0 & \text{We know that } u=Mc\\
+    \frac{F}{\dot{m}} &= \left( \frac{c_e}{c_0} M_e - M_0 \right)c_0  & c = \sqrt{\gamma R T}\\
+    \frac{F}{\dot{m}} &= \left( \frac{\sqrt{\gamma R T_e}}{\sqrt{\gamma R T_0}} M_e - M_0 \right) \sqrt{\gamma R T_0}\\
+\end{align*}
+
+
+\begin{equation}
+        \frac{F}{\dot{m}} = \left( \sqrt{\frac{T_e}{T_0}} M_e - M_0 \right)c_0
+        \label{eq:ST0}
+\end{equation}
+
+\subsubsection{Find $M_e$}
+We take the total enthalpy and get $M_e$ from it using the engine parameters.\\
+
+\begin{align*}
+    h_{t,e} &= h_e + \frac{u_{e}^2}{2} \\
+    T_{te} &= T_e + \frac{u_{e}^2}{2 c_p} \\
+    \frac{T_{t,e}}{T_e} &= 1 + \frac{\gamma -1}{2} M_{e}^2\\
+    M_{e}^2 &= \frac{2}{\gamma - 1} ((\frac{p_{t,e}}{p_e})^{\frac{\gamma-1}{\gamma}}-1) & \text{We that }\frac{p_{t,e}}{p_e} = \pi_r \pi_c \pi_t \\
+    M_{e}^2 &= \frac{2}{\gamma - 1} ((\pi_r \pi_c \pi_t)^{\frac{\gamma-1}{\gamma}}-1) & \pi^{\frac{\gamma -1}{\gamma}} = \tau
+\end{align*}
+
+\begin{equation}
+    M_{e}^2 = \frac{2}{\gamma - 1} (\tau_r \tau_c \tau_t-1)
+    \label{eq:Me0}
+\end{equation}
+
+\subsubsection{Find $\frac{T_e}{T_0}$}
+We want to describe $\frac{T_e}{T_0}$ as a function of engine parameters.\\
+
+\begin{align*}
+    \frac{T_{t,e}}{T_0} &= \frac{T_{t,e}}{T_0} \frac{T_{t,2}}{T_{t,0}} \frac{T_{t,3}}{T_{t,2}} \frac{T_{t,4}}{T_{t,3}} \frac{T_{t,5}}{T_{t,4}} \frac{T_{t,e}}{T_{t,5}}\\
+    \frac{T_{t,e}}{T_0} &= \tau_r \tau_c \tau_b \tau_t
+\end{align*}
+
+\begin{align*}
+    \frac{T_{t,e}}{T_0} &= (\frac{p_{t,e}}{p_e})^{\frac{\gamma-1}{\gamma}} = (\pi_r \pi_c \pi_t)^{\frac{\gamma-1}{\gamma}}\\
+    \frac{T_{t,e}}{T_0} &= \tau_r \tau_c \tau_t
+\end{align*}
+
+$$\frac{T_e}{T_0} = \frac{T_{t,e}/T_0}{T_{t,e}/T_e}$$
+\begin{equation}
+    \frac{T_e}{T_0} = \tau_b
+    \label{eq:TeT00}
+\end{equation}
+\subsubsection{Find $\tau_t$}
+We use the equilibrium between the compressor and the turbine:
+\begin{align*}
+    \dot{W}_c &= \dot{W}_t\\
+    \dot{m} C_p T_{t,4} (1-\frac{T_{t,5}}{T_{t,4}}) &= \dot{m} C_p T_{t,2} (\frac{T_{t,3}}{T_{t,2}}-1)\\
+    (1 - \tau_t) &= \frac{T_{t,2}}{T_{t,4}} (\tau_c -1)
+\end{align*}
+
+\begin{equation}
+    \tau_t = 1- \frac{\tau_r}{\tau_\lambda}(\tau_c -1)
+    \label{eq:taut0}
+\end{equation}
+
+\subsubsection{Find $\tau_b$}
+
+\begin{align*}
+    \tau_b = \frac{T_{t,4}}{T_{t,3}} = \frac{T_{0}}{T_{t,0}} \frac{T_{t,0}}{T_{t,2}} \frac{T_{t,2}}{T_{t,3}}\frac{T_{t,4}}{T_{t,0}} = \frac{1}{\tau_b} \frac{1}{\tau_d} \frac{1}{\tau_c} \tau_\lambda
+\end{align*}
+
+\begin{equation}
+   \tau_b = \frac{\tau_\lambda}{\tau_r \tau_c}
+   \label{eq:taub0}
+\end{equation}
+
+\subsubsection{Back to the Specific thrust}
+We inject the terms \ref{eq:Me0} \ref{eq:TeT00}  \ref{eq:taut0} \ref{eq:taub0} computed up above in the specific thrust equation \ref{eq:ST0}:
+
+\begin{align*}
+    \frac{F}{\dot{m}} &= \left( \sqrt{\frac{T_e}{T_0}} M_e - M_0 \right)c_0\\
+    \frac{F}{\dot{m}} &= \left( \sqrt{\frac{\tau_\lambda}{\tau_r \tau_c} \frac{2}{\gamma - 1} (\tau_r \tau_c \tau_t-1)} - M_0 \right)c_0\\
+\end{align*}
+
+\begin{equation}
+    \frac{F}{\dot{m}} = \left( \sqrt{\frac{\tau_\lambda}{\tau_r \tau_c} \frac{2}{\gamma - 1} ((1-\frac{\tau_r}{\tau_\lambda}(\tau_c -1))\tau_r \tau_c -1)} - M_0 \right)c_0
+    \label{eq:ST0dev}
+\end{equation}
+
+\subsection{Specific thrust optimization}
+Now that we retrieve an equation characterizing the specific thrust \ref{eq:ST0dev}, we can find $\tau_c$ and $\pi_c$ optimizing the specific thrust.\\
+We first need to reshape the function \ref{eq:ST0dev} to simplify the calculation:
+\begin{equation}
+    (\frac{u_e}{c_0})^2 = \frac{2}{\gamma - 1}  \frac{\tau_\lambda}{\tau_r \tau_c} ((1-\frac{\tau_r}{\tau_\lambda}(\tau_c -1))\tau_r \tau_c -1)
+\end{equation}
+
+We can now easily calculate $\frac{\partial}{\partial \tau_c} (\frac{u_e}{c_0})^2 = 0$ that maximizes $\frac{F}{\dot{m}}$
+
+\begin{align*}
+    \frac{\partial}{\partial \tau_c} (\frac{2}{\gamma - 1}  \frac{\tau_\lambda}{\tau_r \tau_c} ((1-\frac{\tau_r}{\tau_\lambda}(\tau_c -1))\tau_r \tau_c -1)) &= 0\\
+    -\frac{\tau_{r}^2}{\tau_\lambda}+\frac{1}{\tau_{c}^2} &= 0\\
+    \tau_c &= \frac{\pm \sqrt{\tau_\lambda}}{\tau_r} & \text{We reject the negative solution}
+\end{align*}
+
+\begin{equation}
+    \tau_c = \frac{\sqrt{\tau_\lambda}}{\tau_r}
+\end{equation}
+
+We know that $\pi_c$ and $\tau_c$ are linked by $\pi_c = \tau_c^{\frac{\gamma}{\gamma-1}}$ so we can find $\pi_c$
+
+\begin{equation}
+    \pi_c = ( \frac{\sqrt{\tau_\lambda}}{\tau_r})^{\frac{\gamma}{\gamma-1}}
+\end{equation}
+
+\subsection{Comparaison with Brayton cycle}
+
+\color{red} TODO: Add comparaison with Brayton cycle \color{black}
+
+\section{Hybrid cycle after-burning turbojet}
+\subsection{Specific thrust}
+We carry out the analysis for a turbojet equipped with an after-burner while introducing polytropic efficiencies for the turbine and compressor: $\eta_t$, $\eta_c$. We need to introfuce a new parameters to unsure the maximum temperature at the after-burner outlet: $\tau_{\lambda, AB} = \frac{T_{t,7}}{T_0}$\\
+We derive the equation in the same fashion as for the case without after-burner. Equation \ref{eq:ST0}, \ref{eq:taut0} and \ref{eq:taub0} are not modified.
+
+$$\frac{F}{\dot{m}} = \left( \sqrt{\frac{T_e}{T_0}} M_e - M_0 \right)c_0$$
+
+$$\tau_t = 1- \frac{\tau_r}{\tau_\lambda}(\tau_c -1)$$
+$$\tau_b = \frac{\tau_\lambda}{\tau_r \tau_c}$$
+
+\subsubsection{Find $M_e$}
+We start from find in the first part \ref{eq:Me0} and introduce the efficiencies: $\pi_{c}^{\frac{\gamma-1}{\gamma}} = \tau_{c}^{\eta_c}$ and $\pi_{t}^{\frac{\gamma-1}{\gamma}} = \tau_{t}^{1/\eta_t}$.
+
+\begin{align*}
+    M_{e}^2 &= \frac{2}{\gamma - 1} ((\pi_r \pi_c \pi_t)^{\frac{\gamma-1}{\gamma}}-1)
+\end{align*}
+
+\begin{equation}
+    M_{e}^2 = \frac{2}{\gamma - 1} (\tau_r \tau_{c}^{\eta_c} \tau_{t}^{1/\eta_t}-1)
+    \label{eq:Me1}
+\end{equation}
+
+\subsubsection{Find $\frac{T_e}{T_0}$}
+We redo all the calculation, taking $\tau_{AB}$ into account this time.
+\begin{align*}
+    \frac{T_{t,e}}{T_0} &= \frac{T_{t,e}}{T_0} \frac{T_{t,2}}{T_{t,0}} \frac{T_{t,3}}{T_{t,2}} \frac{T_{t,4}}{T_{t,3}} \frac{T_{t,5}}{T_{t,4}} \frac{T_{t,7}}{T_{t,5}} \frac{T_{t,e}}{T_{t,7}}\\
+    \frac{T_{t,e}}{T_0} &= \tau_r \tau_c \tau_b \tau_t \tau_{AB}
+\end{align*}
+
+\begin{align*}
+    \frac{T_{t,e}}{T_0} &= (\frac{p_{t,e}}{p_e})^{\frac{\gamma-1}{\gamma}} = (\pi_r \pi_c \pi_t)^{\frac{\gamma-1}{\gamma}}\\
+    \frac{T_{t,e}}{T_0} &= \tau_r \tau_{c}^{\eta_c} \tau_{t}^{1/\eta_t}
+\end{align*}
+
+$$\frac{T_e}{T_0} = \frac{T_{t,e}/T_0}{T_{t,e}/T_e}$$
+\begin{equation}
+    \frac{T_e}{T_0} = \tau_{c}^{1-\eta_c} \tau_{t}^{1 - 1/\eta_t} \tau_b \tau_{AB} 
+    \label{eq:TeT01}
+\end{equation}
+
+\subsubsection{Find $\tau_{AB}$}
+
+\begin{align*}
+    \tau_{AB} = \frac{T_{t,7}}{T_{t,5}} &= \frac{T_{0}}{T_{t,0}}\frac{T_{t,0}}{T_{t,2}}\frac{T_{t,2}}{T_{t,3}}\frac{T_{t,3}}{T_{t,4}}\frac{T_{t,4}}{T_{t,5}}\frac{T_{t,7}}{T_{0}}\\
+    \tau_{AB} &= \frac{1}{\tau_r} \frac{1}{\tau_d} \frac{1}{\tau_c} \frac{1}{\tau_b} \frac{1}{\tau_t} \tau_{\lambda, AB}
+\end{align*}
+
+\begin{equation}
+   \tau_{AB} = \frac{\tau_{\lambda, AB}}{\tau_\lambda \tau_t}
+   \label{eq:tauAB}
+\end{equation}
+
+\subsubsection{Back to specific thrust}
+We consider that the fuel mass flow injected in the after-burner is negligible compared to the air mass flow. We inject the terms \ref{eq:Me1} \ref{eq:TeT01}  \ref{eq:taut0} \ref{eq:taub0} and \ref{eq:tauAB} computed up above in the specific thrust equation \ref{eq:ST0}:
+\begin{align*}
+    (\frac{u_e}{c_0})^2 &= \frac{T_e}{T_0} M_e^2 \\
+    (\frac{u_e}{c_0})^2 &= \tau_{c}^{1-\eta_c} \tau_{t}^{1 - 1/\eta_t} \tau_b \tau_{AB} \frac{2}{\gamma - 1} (\tau_r \tau_{c}^{\eta_c} \tau_{t}^{1/\eta_t}-1)\\
+    (\frac{u_e}{c_0})^2 &= \frac{2}{\gamma - 1} \tau_{\lambda, AB} (1 - \frac{1}{\tau_r \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t}})\\
+\end{align*}
+
+\begin{equation}
+    \frac{F}{\dot{m}} = \left( \sqrt{\frac{2}{\gamma - 1} \tau_{\lambda, AB} (1 - \frac{1}{\tau_r \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t}})} - M_0 \right)c_0
+    \label{ST1}
+\end{equation}
+
+\subsubsection{Specific thrust optimization}
+We can now easily calculate $\frac{\partial}{\partial \tau_c} (\frac{u_e}{c_0})^2 = 0$ that maximizes $\frac{F}{\dot{m}}$.\\
+
+\begin{align*}
+    \frac{\partial}{\partial \tau_c} (\frac{2}{\gamma - 1} \tau_{\lambda, AB} (1 - \frac{1}{\tau_r \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t}})) &= 0\\
+\end{align*}
+
+\begin{equation}
+    \tau_c = \frac{\eta_c \eta_t}{1+ \eta_c \eta_t} \left( \frac{\tau_\lambda}{\tau_r} + 1\right)
+\end{equation}
+
+\subsection{Ramjet specific thrust}
+In the case of a ramjet, there is no compressor and turbine. We have $\tau_c = 1$ and $\tau_t = 1$. We can simplify the specific thrust equation found previously \ref{ST1}:
+
+\begin{equation}
+    \frac{F}{\dot{m}} = \left( \sqrt{\frac{2}{\gamma - 1} \tau_{\lambda, AB} (1 - \frac{1}{\tau_r}}) - M_0 \right)c_0
+    \label{STram}
+\end{equation}
+
+\subsection{Transition Mach number}
+We want to find the Mach number for which the specific thrust of the turbojet with after-burner equals the specific thrust of the ramjet. We equal equations \ref{ST1} and \ref{STram}:
+
+\begin{align*}
+    \tau_{\lambda, AB} (1 - \frac{1}{\tau_r \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t}}) &= \tau_{\lambda, AB} (1 - \frac{1}{\tau_r})\\
+    \frac{1}{\tau_r \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t}} &= \frac{1}{\tau_r}\\
+    \tau{_c}^{\eta_c} \tau{_t}^{1/\eta_t} &= 1\\
+    \tau_{c} ^{\eta_c \eta_t} \tau_t &= 1\\
+    \tau_{c} ^{\eta_c \eta_t} (1- \frac{\tau_r}{\tau_\lambda}(\tau_c -1)) &= 1\\
+    \tau_\lambda \frac{1-\tau_{c}^{-\eta_c \eta_t}}{\tau_c -1} &= \tau_r & \text{We know that } \tau_r = 1 + \frac{\gamma -1}{2} M^2
+\end{align*}
+
+\begin{equation}
+    M_{0} = \sqrt{\frac{2}{\gamma -1} (\tau_\lambda \frac{1-\tau_{c}^{-\eta_c \eta_t}}{\tau_c -1} -1)}
+    \label{Mtrans}
+\end{equation}
+
+\subsubsection{Numerical application}
+We consider the following parameters:
+\begin{itemize}
+    \item $\gamma = 1.4$
+    \item $\pi_c = 20$
+    \item $T_{t,4} = 1400 K$
+    \item $T_{t,0} = 216 K$
+    \item $\eta_c =  \eta_t = 0.9$
+    \item $\tau_\lambda = \frac{T_{t,4}}{T_{t,0}} = \frac{1400}{216} = 6.48$
+    \item $\tau_c = \pi_c^{\frac{\gamma -1}{\gamma} \frac{1}{\eta_c}} = 2.588$
+\end{itemize}
+
+We can now compute the transition Mach number using equation \ref{Mtrans}:\\
+
+$$\boxed{M_{0} = 2.44}$$
+
+\subsection{Graphical representation}
+We plot the specific thrust of the turbojet with after-burner \ref{ST1} and the specific thrust of the ramjet \ref{STram} as a function of the Mach number to visualize the transition Mach number computed previously. We use the same parameters as in the numerical application part.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{images/Specific_Thrust_vs_Mach_Number.pdf}
+    \caption{Specific Thrust vs Mach Number for Turbojet and Ramjet}
+    \label{fig:STvsM}
+\end{figure}
+
+The graph shows that the transition Mach number is around 2.4, which is consistent with the value computed previously.
+We can also observe that the ramjet specific thrust becomes higher than that of the turbojet equipped with after-burner after this Mach number, confirming the advantage of ramjets at high speeds.\\
+It is interesting to note that past Mach 3.5, the turbojet doesn't produce any more thrust.
+
+\subsection{T-S Diagram}
+We plot the T-S diagram of the turbojet with after-burner at a subsonic speed and transition Mach number. We use the same parameters as in the numerical application part.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{images/TSM.pdf}
+    \caption{T-S Diagram of Turbojet with After-Burner at M=0.8}
+    \label{fig:TSdiagram}
+\end{figure}
+
+We can assess the different components of the engine on the T-S diagram.
+First, we observe that the ram effect (0-2) is more present at M=2.44 than at M=0.8, as expected since the ram effect increases with the Mach number.\\
+We can also observe at that at M=2.44, the compressor generates large amount of heat and need a lot of work from the turbine to compress the air.\\
+At lower Mach number (M=0.8), the temperature increases a lot in the combustion chamber, as well as the entropy while at M=2.44, the temperature increase is more moderate. This is due to the fact that at higher Mach number, the air entering the combustor is already at a higher temperature due to the ram effect and the compressor, so less fuel is needed to reach the same turbine inlet temperature.\\
+\color{red} TODO: Add more analysis \color{black}
+
+\subsection{Specific fuel thrust consumption}
+
+\end{document}
+
