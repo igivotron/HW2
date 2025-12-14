@@ -5,7 +5,9 @@ from math import sqrt
 
 plotMach = 0
 plotTS = 0
-TSFC  = 1
+TSFC  = 0
+offdesign = 0
+ODST = 1
 
 # Flight conditions
 LHV = 43.19e6  # J/kg
@@ -235,4 +237,90 @@ if TSFC:
 
 
 
-    pass
+
+Tt4REF = 1400
+Tt7 = 2300
+TSL = 288.15
+pSL = 101325
+T0 = 216
+thetaREF = 1.3
+tau_c_REF = piC**((gamma - 1) / (gamma * etaC))
+
+tau_lbd_REF = Tt4REF / (thetaREF * TSL)
+tau_t_REF = 1 - thetaREF* (TSL/T0) *(tau_c_REF -1) / tau_lbd_REF
+
+def get_tau_lbd_offdesign(M):
+    theta = T0/TSL * (1 + (gamma - 1)/2 * M**2)
+    return Tt4REF / (theta * TSL)
+
+def get_tau_lbdAB_offdesign(M):
+    theta = T0/TSL * (1 + (gamma - 1)/2 * M**2)
+    return Tt7 / (theta * TSL)
+
+def get_tau_c_offdesign(M):
+    theta = T0/TSL * (1 + (gamma - 1)/2 * M**2)
+    return 1 + Tt4REF * (1 - tau_t_REF) / (theta * TSL)
+
+def get_tau_t_offdesign(M):
+    theta = T0/TSL * (1 + (gamma - 1)/2 * M**2)
+    tau_c = get_tau_c_offdesign(M)
+    tau_lbd = get_tau_lbd_offdesign(M)
+    return 1 - theta * (TSL/T0) * (tau_c -1) / tau_lbd
+    
+if offdesign:
+    M = np.linspace(0, 4, 100)
+    tau_lbd_offdesign = [get_tau_lbd_offdesign(Mach) for Mach in M]
+    tau_c_offdesign = [get_tau_c_offdesign(Mach) for Mach in M]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(M, tau_lbd_offdesign, label=r'Off-design $\tau_{\lambda}$', color='blue')
+    plt.plot(M, tau_c_offdesign, label=r'Off-design $\tau_{c}$', color='red')
+
+    plt.axhline(y=tau_lbd_REF, color='blue', linestyle='--', label=r'Reference $\tau_{\lambda}$')
+    plt.axhline(y=tau_c_REF, color='red', linestyle='--', label=r'Reference $\tau_{c}$')
+
+    plt.xlabel('Mach Number (M)', fontsize=14)
+    plt.ylabel('Non-dimensional parameters', fontsize=14)
+    plt.title(r'Off-design $\tau_{\lambda}$ and $\tau_{c}$ vs Mach Number', fontsize=16)
+    plt.legend()
+    plt.grid()
+    plt.savefig('OD1.pdf')
+    plt.show()
+
+def ST_turbojet_offdesign(M):
+    tau_t = get_tau_t_offdesign(M)
+    tau_r = getTau_r(M)
+    tau_c = get_tau_c_offdesign(M)
+    tau_lbdAB = get_tau_lbdAB_offdesign(M)
+
+    term1 = 2 / (gamma - 1)
+    term2 = 1 - (1 / ( tau_r * (tau_c**etaC) * (tau_t**(1/etaT)) ))
+    term3 = term1 * term2 * tau_lbdAB
+    if term3 < 0:
+        return None
+    return c0 * (sqrt(term3) - M)
+
+def ST_ramjet_offdesign(M):
+    tau_r = getTau_r(M)
+    tau_lbdAB = get_tau_lbdAB_offdesign(M)
+    term1 = 2 / (gamma - 1)
+    term2 = 1 - (1 / ( tau_r ))
+    term3 = term1 * term2 * tau_lbdAB
+    return c0 * (sqrt(term3) - M)
+
+if ODST:
+    M_values = np.linspace(2, 4, 100)
+    ST_turbojet_OD_values = [ST_turbojet_offdesign(M) for M in M_values]
+    ST_ramjet_OD_values = [ST_ramjet_offdesign(M) for M in M_values]
+    plt.figure(figsize=(10, 6))
+    plt.plot(M_values, ST_turbojet_OD_values, label='Turbojet Off-design', color='blue')
+    plt.plot(M_values, ST_ramjet_OD_values, label='Ramjet Off-design', color='red')
+    plt.axvline(x=Mtrans, color='green', linestyle='--', label='Old transition Mach Number (M=2.44)')
+    plt.xlabel('Mach Number (M)', fontsize=14)
+    plt.ylabel('Specific Thrust (ST) [m/s]', fontsize=14)
+    plt.title('Off-design Specific Thrust vs Mach Number for Turbojet and Ramjet', fontsize=16)
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+    
