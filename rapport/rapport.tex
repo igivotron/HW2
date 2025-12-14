@@ -318,17 +318,67 @@ We plot the T-S diagram of the turbojet with after-burner at a subsonic speed an
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{images/TSM.pdf}
-    \caption{T-S Diagram of Turbojet with After-Burner at M=0.8}
+    \caption{T-S Diagram of Turbojet and Ramjet at M=0.8 and M=2.44}
     \label{fig:TSdiagram}
 \end{figure}
 
 We can assess the different components of the engine on the T-S diagram.
 First, we observe that the ram effect (0-2) is more present at M=2.44 than at M=0.8, as expected since the ram effect increases with the Mach number.\\
 We can also observe at that at M=2.44, the compressor generates large amount of heat and need a lot of work from the turbine to compress the air.\\
-At lower Mach number (M=0.8), the temperature increases a lot in the combustion chamber, as well as the entropy while at M=2.44, the temperature increase is more moderate. This is due to the fact that at higher Mach number, the air entering the combustor is already at a higher temperature due to the ram effect and the compressor, so less fuel is needed to reach the same turbine inlet temperature.\\
-\color{red} TODO: Add more analysis \color{black}
-
+At lower Mach number (M=0.8), the temperature increases a lot in the combustion chamber, as well as the entropy while at M=2.44, the temperature and entropy increase are more moderate. This is due to the fact that at higher Mach number, the air entering the combustor is already at a higher temperature due to the ram effect and the compressor.\\
+We can see that the turbine need to produce a huge amount of work at M=2.44 to drive the compressor compared to M=0.8. At the turbine outlet, the air is at lower temperature and much lower entropy at M=2.44 compared with M=0.8\\
+The after-burner increases significantly the temperature and entropy of the air before the nozzle at both Mach numbers, providing additional thrust with huge fuel consumption.\\
+On the other and, the ramjet cycle shows a more straightforward process with a continuous increase in temperature and entropy from inlet to nozzle. We can see the ram effect (0-2) followed by the combustion process (2-5). Pratically all the combustion process is "post combustion" as there is no turbine or compressor but we divide the process in two part is the same fashion as the turbojet.\\
 \subsection{Specific fuel thrust consumption}
+We want to analyse the specific fuel thrust consumption (TSFC) of the turbojet with after-burner. We first need to define the TSFC:
+\begin{equation}
+    TSFC = \frac{\dot{m}_{f,tot}}{F} = \frac{f_{tot}}{F/\dot{m}}
+\end{equation}
+
+We also need to define the fuel-to-air ratio $f_{tot}$:\\
+\subsubsection{Turbojet fuel-to-air ratio}
+For the burner we have:
+\begin{align*}
+    \dot{m}_0 h_{t,3} + \dot{m}_f LHV &= (\dot{m}_0 + \dot{m}_f) h_{t,4} & \text{We assume that } \dot{m}_0 + \dot{m}_f = \approx \dot{m}_0 \\
+    \dot{m}_0 c_p T_{t,3} + \dot{m}_f LHV &= \dot{m}_0 c_p T_{t,4} & f = \frac{\dot{m}_f}{\dot{m}_0}\\
+    f = \frac{c_p (T_{t,4} - T_{t,3})}{LHV}\\
+    f = \frac{c_p T_{0} (\tau_\lambda - \tau_r \tau_c)}{LHV}
+\end{align*}
+For the after-burner we have:
+\begin{align*}
+    \dot{m}_0 h_{t,5} + \dot{m}_{f,AB} LHV &= (\dot{m}_0 + \dot{m}_{f,AB}) h_{t,7} & \text{We assume that } \dot{m}_0 + \dot{m}_{f,AB} = \approx \dot{m}_0 \\
+    \dot{m}_0 c_p T_{t,5} + \dot{m}_{f,AB} LHV &= \dot{m}_0 c_p T_{t,7} & f_{AB} = \frac{\dot{m}_{f,AB}}{\dot{m}_0}\\
+    f_{AB} &= \frac{c_p (T_{t,7} - T_{t,5})}{LHV} & \frac{T_{t,5}}{T_0} = \frac{T_{t,0}}{T_0} \frac{T_{t,2}}{T_{t,0}} \frac{T_{t,3}}{T_{t,2}} \frac{T_{t,4}}{T_{t,3}} \frac{T_{t,5}}{T_{t,4}}\\
+    f_{AB} &= \frac{c_p T_{0} (\tau_{\lambda, AB} - \tau_r \tau_c \tau_b \tau_t)}{LHV}
+\end{align*}
+
+The total fuel-to-air ratio is:
+\begin{equation}
+    f_{tot} = f + f_{AB} = \frac{c_p T_{0} (\tau_\lambda - \tau_r \tau_c)}{LHV} + \frac{c_p T_{0} (\tau_{\lambda, AB} - \tau_r \tau_c \tau_b \tau_t)}{LHV}
+\end{equation}
+
+\subsubsection{Ramjet fuel-to-air ratio}
+For the ramjet we have:
+\begin{align*}
+    \dot{m}_0 h_{t,2} + \dot{m}_f LHV &= (\dot{m}_0 + \dot{m}_f) h_{t,7} & \text{We assume that } \dot{m}_0 + \dot{m}_f = \approx \dot{m}_0 \\
+    \dot{m}_0 c_p T_{t,2} + \dot{m}_f LHV &= \dot{m}_0 c_p T_{t,7} & f = \frac{\dot{m}_f}{\dot{m}_0}\\
+    f = \frac{c_p (T_{t,7} - T_{t,2})}{LHV}\\
+    f = \frac{c_p T_{0} (\tau_{\lambda, AB} - \tau_r)}{LHV}
+\end{align*}
+
+\subsubsection{Numerical application}
+We have plotted the TSFC of the turbojet with after-burner and the ramjet as a function of the Mach number using the same parameters as in the previous part.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{images/TSFC.pdf}
+    \caption{TSFC vs Mach Number for Turbojet and Ramjet}
+    \label{fig:TSFCvsM}
+\end{figure}
+
+We observe that the TSFC of the ramjet is lower than that of the turbojet with after-burner for Mach numbers higher than the transition Mach number (M=2.44). This confirms the advantage of ramjets at high speeds.\\
+We can also observe that the TFSC of the turbojet with after-burner increases significantly with the Mach number, indicating that the fuel consumption becomes less efficient at higher speeds. On the other hand, the TSFC of the ramjet decreases then remains relatively constant across the high Mach number range.\\
+
+\section{Off-design analysis of turbojet}
 
 \end{document}
 

@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 from math import sqrt
 
 
-plotMach = False
-plotTS = True
+plotMach = 0
+plotTS = 0
+TSFC  = 1
 
 # Flight conditions
+LHV = 43.19e6  # J/kg
 T0 = 216
 R = 287
 gamma = 1.4
@@ -129,6 +131,26 @@ if plotTS:
     T57prim = np.linspace(T45prim[-1], Tt7, Npoints)
     s57prim = s45prim[-1] + cp * np.log(T57prim / T45prim[-1])
 
+
+    # Ramjet T-s diagram
+    M = 2.44
+    tau_r = getTau_r(M)
+    
+    s02ram = np.zeros(Npoints)
+    p02ram = np.linspace(1, pi_r, Npoints)
+    T02ram = T0 * p02ram**((gamma - 1) / gamma)
+    # No compressor
+    # 2 to 4 Combustion: isobaric heat addition
+    p24ram = np.full(Npoints, p02ram[-1])
+    T24ram = np.linspace(T02ram[-1], Tt4, Npoints)
+    s24ram = s02ram[-1] + cp * np.log(T24ram / T02ram[-1])
+    # 4 to 7 : Afterburner: isobaric heat addition
+    p47ram = np.full(Npoints, p24ram[-1])
+    T47ram = np.linspace(T24ram[-1], Tt7, Npoints)
+    s47ram = s24ram[-1] + cp * np.log(T47ram / T24ram[-1])
+
+
+
     plt.figure(figsize=(10, 6))
     
     plt.plot(s02, T02, label='0-2 Ram Effect (M=0.8)', color='blue')
@@ -143,13 +165,74 @@ if plotTS:
     plt.plot(s45prim, T45prim, '--', label='4-5 Turbine (M=2.44)', color='green')
     plt.plot(s57prim, T57prim, '--', label='5-7 Afterburner (M=2.44)', color='purple')
 
+    plt.plot(s02ram, T02ram, ':', label='0-2 Ram Effect Ramjet (M=2.44)', color='cyan')
+    plt.plot(s24ram, T24ram, ':', label='2-4 Combustion Ramjet (M=2.44)', color='magenta')
+    # plt.plot(s47ram, T47ram, ':', label='4-7 Afterburner Ramjet (M=2.44)', color='brown')
+
 
     plt.xlabel('Entropy (s) [J/(kg·K)]', fontsize=14)
     plt.ylabel('Temperature (T) [K]', fontsize=14)
     plt.title('T-s Diagram of Turbojet with Afterburner', fontsize=16)
-    plt.legend()
+    plt.legend(
+    loc='center left',
+    bbox_to_anchor=(1, 0.5),
+    fontsize=10
+)
     plt.grid()
+    plt.tight_layout()
     plt.savefig('TSM.pdf')
     plt.show()
 
+
+if TSFC:
+    def get_f(M):
+        tau_r = getTau_r(M)
+        tau_t = getTau_t(M)
+        tau_c = piC**((gamma - 1) / (gamma * etaC))
+        Tt3 = T0 * tau_r * tau_c
+        tau_b = Tt4 / Tt3
+        f = (cp * T0 * (tau_lbd - tau_r * tau_c)) / LHV
+        f_AB = (cp * T0 * (tau_lbdAB - tau_r * tau_c * tau_b * tau_t)) / LHV
+        return f + f_AB  # kg fuel/kg air
     
+    def get_f_ramjet(M):
+        tau_r = getTau_r(M)
+        f = (cp * T0 * (tau_lbdAB - tau_r)) / LHV
+        return f  # kg fuel/kg air
+    
+    def get_TSFC(M):
+        ST = ST_turbojet(M)
+        if ST is None:
+            return None
+        f = get_f(M)
+        return f / ST  # kg/Ns
+    
+    def get_TSFC_ramjet(M):
+        ST = ST_ramjet(M)
+        f = get_f_ramjet(M)
+        return f / ST  # kg/Ns
+    
+    M_turbo = np.linspace(0, 3.3, 100)
+    M_ramjet = np.linspace(0, 4, 100)
+    f_values = [get_TSFC(M) for M in M_turbo]
+    f_ramjet_values = [get_TSFC_ramjet(M) for M in M_ramjet]
+
+
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(M_turbo, f_values, label='TSFC vs Mach Number', color='blue')
+    plt.plot(M_ramjet, f_ramjet_values, label='Ramjet TSFC vs Mach Number', color='red')
+    # log y axis
+    plt.yscale('log')
+    plt.axvline(x=Mtrans, color='green', linestyle='--', label='Transition Mach Number (M=2.44)')
+    plt.xlabel('Mach Number (M)', fontsize=14)
+    plt.ylabel('TSFC [kg/Ns]', fontsize=14)
+    plt.title('TSFC vs Mach Number', fontsize=16)
+    plt.legend()
+    plt.grid()
+    plt.savefig('TSFC.pdf')
+    plt.show()
+
+
+
+    pass
